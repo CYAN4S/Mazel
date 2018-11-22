@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2041
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mazel", "Mazel\Mazel.csproj", "{D6F570B1-1C9F-48B6-AC34-11F96C2ECAAC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6F570B1-1C9F-48B6-AC34-11F96C2ECAAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6F570B1-1C9F-48B6-AC34-11F96C2ECAAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6F570B1-1C9F-48B6-AC34-11F96C2ECAAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6F570B1-1C9F-48B6-AC34-11F96C2ECAAC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {69E0A764-1008-44AD-AEE2-E8C3B222B1E8}
+	EndGlobalSection
+EndGlobal
