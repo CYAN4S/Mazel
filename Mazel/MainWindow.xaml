@@ -5,8 +5,52 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mazel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="MainWindow" Height="450" Width="802">
+    <Grid Name="RootGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="52*"/>
+            <ColumnDefinition Width="47*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Name="MazeGrid" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Rectangle Fill="Black" StrokeThickness="0"/>
+            <Rectangle Fill="Black" StrokeThickness="0" Grid.Column="1"/>
+        </Grid>
+        <Grid Name="MenuGrid" Grid.Column="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Generator" Background="{x:Null}" FontFamily="/Mazel;component/#Montserrat" Grid.Row="1" FontSize="20" Margin="0,0,0,66"/>
+            <Button Content="Generate" Grid.Column="1" Margin="10" Grid.Row="1" FontFamily="/Mazel;component/#Montserrat" Click="MenuGenerateButton"/>
+            <ComboBox HorizontalAlignment="Left" Margin="10,39,0,0" Grid.Row="1" VerticalAlignment="Top" Width="248"/>
+            <ComboBox HorizontalAlignment="Left" Margin="10,66,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120"/>
+            <ComboBox HorizontalAlignment="Left" Margin="138,66,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120"/>
+
+            <Label Content="Solver" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top" Width="268"/>
+            <Button Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Grid.Row="2" Width="69"/>
+            <ComboBox HorizontalAlignment="Left" Margin="94,57,0,0" Grid.Row="2" VerticalAlignment="Top" Width="120"/>
+            <Label Content="Label" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top"/>
+            <Button Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="69" Height="79"/>
+
+
+        </Grid>
+
     </Grid>
 </Window>
