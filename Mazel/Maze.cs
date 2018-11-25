@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Mazel
 {
@@ -92,6 +93,8 @@ namespace Mazel
             }
             else
                 return false;
+            
+            
         }
         
         public void SetUsage(Usage usage)
@@ -135,5 +138,27 @@ namespace Mazel
         }
 
         // SECTOR //
+        public bool SetSector(ArrayPoint2D point, int sectorNumber)
+        {
+            if (usage == Usage.SECTOR)
+            {
+                Cells[point.r][point.c] = sectorNumber;
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public int GetSector(ArrayPoint2D point)
+        {
+            if (usage == Usage.SECTOR)
+            {
+                return Cells[point.r][point.c];
+            }
+            else
+            {
+                return -1;
+            }
+        }
     }
 }

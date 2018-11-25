@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
+using System.Windows.Threading;
 
 namespace Mazel
 {
@@ -26,19 +28,19 @@ namespace Mazel
         {
             InitializeComponent();
 
-            mainMaze = new Maze(new ArrayPoint2D(100, 100), new ArrayPoint2D(0, 0), new ArrayPoint2D(9, 10));
-
+            mainMaze = new Maze(new ArrayPoint2D(10, 10), new ArrayPoint2D(0, 0), new ArrayPoint2D(9, 10));
             
             Prepare();
             ShowMaze();
         }
 
-        void Prepare()
+        public void Prepare()
         {
             // CLEAR ALL ENTITIES IN GRID //
             MazeGrid.Children.Clear();
             MazeGrid.RowDefinitions.Clear();
             MazeGrid.ColumnDefinitions.Clear();
+            //
 
             // MAKE DEFINITIONS //
             MazeGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
@@ -100,7 +102,7 @@ namespace Mazel
             Grid.SetColumnSpan(downWall, mainMaze.GetSize().c * 2 + 1);
         }
 
-        void ShowMaze()
+        public void ShowMaze()
         {
             for (int i = 0; i < mainMaze.GetSize().r - 1; i++)
             {
@@ -143,10 +145,22 @@ namespace Mazel
 
         private void MenuGenerateButton(object sender, RoutedEventArgs e)
         {
-            mainMaze = new Maze(new ArrayPoint2D(100, 100), new ArrayPoint2D(0, 0), new ArrayPoint2D(9, 10));
-            MazeGenerator.RecursiveBacktracker(mainMaze);
+            mainMaze = new Maze(new ArrayPoint2D(10, 10), new ArrayPoint2D(0, 0), new ArrayPoint2D(9, 10));
+            //MazeGenerator.RecursiveBacktracker(mainMaze);
+            MazeGenerator.HuntAndKill(mainMaze);
             Prepare();
             ShowMaze();
         }
+
+        private void MenuSolveButton(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void MenuGenerateAlgComboChange(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+        
     }
 }
