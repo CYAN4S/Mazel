@@ -145,9 +145,25 @@ namespace Mazel
 
         private void MenuGenerateButton(object sender, RoutedEventArgs e)
         {
-            mainMaze = new Maze(new ArrayPoint2D(10, 10), new ArrayPoint2D(0, 0), new ArrayPoint2D(9, 10));
-            //MazeGenerator.RecursiveBacktracker(mainMaze);
-            MazeGenerator.HuntAndKill(mainMaze);
+            ArrayPoint2D size = new ArrayPoint2D(int.Parse(RowSizeComboBox.SelectedItem.ToString()), int.Parse(ColSizeComboBox.SelectedItem.ToString()));
+
+            mainMaze = new Maze(size, new ArrayPoint2D(0, 0), new ArrayPoint2D(9, 10));
+
+            switch (GenerateAlgComboBox.SelectedIndex)
+            {
+                case 0:
+                    MazeGenerator.RecursiveBacktracker(mainMaze);
+                    break;
+
+                case 1:
+                    MazeGenerator.HuntAndKill(mainMaze);
+                    break;
+
+                default:
+                    break;
+            }
+            
+            
             Prepare();
             ShowMaze();
         }

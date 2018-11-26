@@ -39,17 +39,21 @@
 
             <Label Content="Generator" FontFamily="/Mazel;component/#Montserrat" Grid.Row="1" FontSize="20" Margin="0,0,0,61"/>
             <Button Content="Generate" Grid.Column="1" Margin="10" Grid.Row="1" FontFamily="/Mazel;component/#Montserrat" Click="MenuGenerateButton"/>
-            <ComboBox HorizontalAlignment="Left" Margin="10,39,0,0" Grid.Row="1" VerticalAlignment="Top" Width="248" SelectionChanged="MenuGenerateAlgComboChange">
+            <ComboBox HorizontalAlignment="Left" Margin="10,39,0,0" Grid.Row="1" VerticalAlignment="Top" Width="248" SelectionChanged="MenuGenerateAlgComboChange" Name="GenerateAlgComboBox" SelectedIndex="0">
                 <ComboBoxItem Content="Recursive Backtracker" HorizontalAlignment="Left" Width="246"/>
                 <ComboBoxItem Content="Kruskal" HorizontalAlignment="Left" Width="246"/>
                 <ComboBoxItem Content="Hunt-And-Kill" HorizontalAlignment="Left" Width="246"/>
             </ComboBox>
-            <ComboBox HorizontalAlignment="Left" Margin="10,66,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120"/>
-            <ComboBox HorizontalAlignment="Left" Margin="138,66,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120"/>
+            <ComboBox HorizontalAlignment="Left" Margin="10,66,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" IsEditable="True" Name="RowSizeComboBox" SelectedIndex="0">
+                <ComboBoxItem Content="10" HorizontalAlignment="Left" Width="118"/>
+            </ComboBox>
+            <ComboBox HorizontalAlignment="Left" Margin="138,66,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" IsEditable="True" Name="ColSizeComboBox" SelectedIndex="0">
+                <ComboBoxItem Content="10" HorizontalAlignment="Left" Width="118"/>
+            </ComboBox>
 
             <Label Content="Solver" Grid.Row="2" FontSize="20" FontFamily="/Mazel;component/#Montserrat" Margin="0,0,0,66"/>
             <Button Content="Solve" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Grid.Row="2" Width="69" FontFamily="/Mazel;component/#Montserrat" Click="MenuSolveButton"/>
-            <ComboBox HorizontalAlignment="Left" Margin="10,39,0,0" Grid.Row="2" VerticalAlignment="Top" Width="248"/>
+            <ComboBox HorizontalAlignment="Left" Margin="10,39,0,0" Grid.Row="2" VerticalAlignment="Top" Width="248" Name="SolveAlgComboBox"/>
 
             <Label Content="Play MAZE" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Height="99" Width="268" FontFamily="/Mazel;component/#Montserrat" FontSize="20"/>
             <Button Content="Play" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="69" Height="79" FontFamily="/Mazel;component/#Montserrat"/>
