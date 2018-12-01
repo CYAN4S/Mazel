@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Threading;
 
 namespace Mazel
 {
@@ -18,6 +17,11 @@ namespace Mazel
             this.c = c;
         }
 
+        public override string ToString()
+        {
+            return "(" + r + ", " + c + ")";
+        }
+
         public static ArrayPoint2D operator+(ArrayPoint2D left, ArrayPoint2D right)
         {
             ArrayPoint2D result;
@@ -25,6 +29,8 @@ namespace Mazel
             result.c = left.c + right.c;
             return result;
         }
+
+
     }
 
     enum Usage
@@ -79,16 +85,18 @@ namespace Mazel
             }
         }
 
-        public bool RemoveWallBetween(ArrayPoint2D pos0, ArrayPoint2D pos1)
+        public bool RemoveWallBetween(ArrayPoint2D pos0, ArrayPoint2D pos1, Action action)
         {
             if (pos0.r == pos1.r)
             {
                 VerWalls[pos0.r][pos0.c > pos1.c ? pos1.c : pos0.c] = false;
+                action();
                 return true;
             }
             else if (pos0.c == pos1.c)
             {
                 HolWalls[pos0.r > pos1.r ? pos1.r : pos0.r][pos0.c] = false;
+                action();
                 return true;
             }
             else
@@ -97,68 +105,5 @@ namespace Mazel
             
         }
         
-        public void SetUsage(Usage usage)
-        {
-            this.usage = usage;
-            foreach (List<int> list in Cells)
-            {
-                for (int i = 0; i < list.Count; i++)
-                    list[i] = 0;
-            }
-        }
-
-        // VISITATION //
-        public bool Visit(ArrayPoint2D point)
-        {
-            if (usage == Usage.VISITATION)
-            {
-                Cells[point.r][point.c] = 1;
-                return true;
-            }
-            else
-                return false;
-        }
-
-        public bool HasVisited(ArrayPoint2D point)
-        {
-            return Cells[point.r][point.c] == 1;
-        }
-
-        public bool HasVisitedAll()
-        {
-            if (usage != Usage.VISITATION)
-                return false;
-
-            foreach (var i in Cells)
-            {
-                if (i.Contains(0))
-                    return false;
-            }
-            return true;
-        }
-
-        // SECTOR //
-        public bool SetSector(ArrayPoint2D point, int sectorNumber)
-        {
-            if (usage == Usage.SECTOR)
-            {
-                Cells[point.r][point.c] = sectorNumber;
-                return true;
-            }
-            else
-                return false;
-        }
-
-        public int GetSector(ArrayPoint2D point)
-        {
-            if (usage == Usage.SECTOR)
-            {
-                return Cells[point.r][point.c];
-            }
-            else
-            {
-                return -1;
-            }
-        }
     }
 }

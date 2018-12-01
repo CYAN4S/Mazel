@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Threading;
 
 namespace Mazel
 {
@@ -10,6 +12,7 @@ namespace Mazel
     {
         static Random random = new Random();
 
+        // Place to Add, Current Position, Maze Size
         public static void AddNeighbor(List<ArrayPoint2D> list, ArrayPoint2D position, ArrayPoint2D mazeSize)
         {
             if (position.r != 0)
@@ -25,102 +28,167 @@ namespace Mazel
                 list.Add(new ArrayPoint2D(position.r, position.c + 1));
         }
 
-        public static void RecursiveBacktracker(Maze maze)
+        #region Log Writer
+        public static void StartWrite()
         {
-            maze.SetUsage(Usage.VISITATION);
-
-            ArrayPoint2D current = maze.StartPoint;
-            maze.Visit(current);
-
-            ArrayPoint2D size = maze.GetSize();
-
-            Stack<ArrayPoint2D> PointStack = new Stack<ArrayPoint2D>();
-
-            while (!maze.HasVisitedAll())
+            using (FileStream fs = new FileStream("test.log", FileMode.Create))
             {
-                List<ArrayPoint2D> avail = new List<ArrayPoint2D>();
-                AddNeighbor(avail, current, size);
-                avail.RemoveAll(maze.HasVisited);
-                if (avail.Count() != 0)
-                {
-                    ArrayPoint2D target = avail[random.Next(avail.Count())];
-                    PointStack.Push(current);
-                    maze.RemoveWallBetween(current, target);
-                    maze.Visit(target);
-                    current = target;
-                }
-                else
-                {
-                    current = PointStack.Pop();
-                }
+                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+                sw.WriteLine("WRITE START");
+                sw.Flush();
             }
         }
-
-        public static void Kruskal(Maze maze)
+        public static void AppendWrite(string line)
         {
-            maze.SetUsage(Usage.SECTOR);
-
-            int sectorNumber = 0;
-            for (int i = 0; i < maze.GetSize().r; i++)
+            using (FileStream fs = new FileStream("test.log", FileMode.Append))
             {
-                for (int j = 0; j < maze.GetSize().c; j++)
-                {
-                    maze.SetSector(new ArrayPoint2D(i, j), sectorNumber++);
-                }
+                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+                sw.WriteLine(line);
+                sw.Flush();
             }
         }
+        #endregion
 
-        public static void HuntAndKill(Maze maze)
+        static bool hasVisitedAll(List<List<bool>> vs)
         {
-            maze.SetUsage(Usage.VISITATION);
-
-            ArrayPoint2D size = maze.GetSize();
-            ArrayPoint2D current = new ArrayPoint2D(random.Next(size.r), random.Next(size.c));
-            maze.Visit(current);
-            
-            while (!maze.HasVisitedAll())
+            foreach (var i in vs)
             {
-                List<ArrayPoint2D> avail = new List<ArrayPoint2D>();
-                AddNeighbor(avail, current, size);
-                avail.RemoveAll(maze.HasVisited);
-                while (avail.Count() != 0)
+                if (i.Contains(false))
+                    return false;
+            }
+            return true;
+        }
+
+        public static void RecursiveBacktracker(Maze maze, Action action)
+        {
+            #region INITIALIZE
+            ArrayPoint2D size = maze.GetSize();
+            List<List<bool>> hasVisited = new List<List<bool>>();
+
+            for (int i = 0; i < size.r; i++)
+            {
+                hasVisited.Add(new List<bool>(size.c));
+                for (int j = 0; j < size.c; j++)
+                    hasVisited[i].Add(false);
+            }
+            #endregion
+            using (FileStream fs = new FileStream("test.log", FileMode.Create))
+            {
+                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+                #region ALGORITHM
+                // CODE STARTS HERE //
+                ArrayPoint2D current = maze.StartPoint;
+                hasVisited[current.r][current.c] = true;
+                sw.WriteLine("Recursive Backtracker 생성입니다. 현재 위치는 " + current + " 입니다."); // LOG
+
+                Stack<ArrayPoint2D> PointStack = new Stack<ArrayPoint2D>();
+
+                while (!hasVisitedAll(hasVisited))
                 {
-                    ArrayPoint2D target = avail[random.Next(avail.Count())];
-                    maze.RemoveWallBetween(current, target);
-                    maze.Visit(target);
-                    current = target;
-                    avail.Clear();
+                    List<ArrayPoint2D> avail = new List<ArrayPoint2D>();
                     AddNeighbor(avail, current, size);
-                    avail.RemoveAll(maze.HasVisited);
-                }
-
-                bool restart = false;
-                ArrayPoint2D loop;
-                for (int i = 0; i < size.r; i++)
-                {
-                    for (int j = 0; j < size.c; j++)
+                    avail.RemoveAll(_ => hasVisited[_.r][_.c]);
+                    if (avail.Count() != 0)
                     {
-                        loop = new ArrayPoint2D(i, j);
-                        if (maze.HasVisited(loop))
-                        {
-                            List<ArrayPoint2D> related = new List<ArrayPoint2D>();
-                            AddNeighbor(related, loop, size);
-                            related.RemoveAll(s => maze.HasVisited(s));
-
-                            if (related.Count() == 0)
-                                continue;
-
-                            ArrayPoint2D target = related[random.Next(related.Count())];
-                            maze.RemoveWallBetween(loop, target);
-                            maze.Visit(loop);
-                            current = loop;
-                            restart = true;
-                            break;
-                        }
+                        ArrayPoint2D target = avail[random.Next(avail.Count())];
+                        PointStack.Push(current);
+                        sw.WriteLine("스택에 " + current + " 가 푸시되었습니다."); // LOG
+                        maze.RemoveWallBetween(current, target, action);
+                        sw.WriteLine(current + " 와 " + target + " 사이 벽이 제거되었습니다."); // LOG
+                        action(); // GRAPHIC
+                        hasVisited[target.r][target.c] = true;
+                        current = target;
+                        sw.WriteLine("현재 위치는 이제 " + current + " 입니다."); // LOG
                     }
-                    if (restart) break;
+                    else
+                    {
+                        current = PointStack.Pop();
+                        sw.WriteLine("현재 위치를 스택에서 팝된 데이터로 설정합니다. " + current + " 가 팝되었습니다."); // LOG
+                    }
                 }
+                #endregion
+                sw.Flush();
             }
+        }
+
+        public static void Kruskal(Maze maze, Action action)
+        {
+        }
+
+        public static void HuntAndKill(Maze maze, Action action)
+        {
+            #region INITIALIZE
+            ArrayPoint2D size = maze.GetSize();
+            List<List<bool>> hasVisited = new List<List<bool>>();
+
+            for (int i = 0; i < size.r; i++)
+            {
+                hasVisited.Add(new List<bool>(size.c));
+                for (int j = 0; j < size.c; j++)
+                    hasVisited[i].Add(false);
+            }
+            #endregion
+            using (FileStream fs = new FileStream("test.log", FileMode.Create))
+            {
+                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+                #region ALGORITHM
+                // CODE STARTS HERE //
+                ArrayPoint2D current = new ArrayPoint2D(random.Next(size.r), random.Next(size.c));
+                hasVisited[current.r][current.c] = true;
+                sw.WriteLine("Hunt-And-Kill 생성입니다. 현재 위치는 " + current + " 입니다."); // LOG
+
+                while (!hasVisitedAll(hasVisited))
+                {
+                    List<ArrayPoint2D> avail = new List<ArrayPoint2D>();
+                    AddNeighbor(avail, current, size);
+                    avail.RemoveAll(_ => hasVisited[_.r][_.c]);
+                    while (avail.Count() != 0)
+                    {
+                        ArrayPoint2D target = avail[random.Next(avail.Count())];
+                        maze.RemoveWallBetween(current, target, action);
+                        sw.WriteLine("미로를 생성 중입니다. " + current + " 와 " + target + " 사이 벽이 제거되었습니다.");
+                        hasVisited[target.r][target.c] = true;
+                        current = target;
+                        avail.Clear();
+                        AddNeighbor(avail, current, size);
+                        avail.RemoveAll(_ => hasVisited[_.r][_.c]);
+                    }
+
+                    bool restart = false; // 이중 반복문 탈출을 위해
+                    ArrayPoint2D loop;
+                    for (int i = 0; i < size.r; i++)
+                    {
+                        for (int j = 0; j < size.c; j++)
+                        {
+                            loop = new ArrayPoint2D(i, j);
+                            if (!hasVisited[loop.r][loop.c])
+                            {
+                                List<ArrayPoint2D> related = new List<ArrayPoint2D>();
+                                AddNeighbor(related, loop, size);
+                                related.RemoveAll(_ => !hasVisited[_.r][_.c]);
+
+                                if (related.Count == 0)
+                                    continue;
+
+                                ArrayPoint2D target = related[random.Next(related.Count())];
+                                maze.RemoveWallBetween(loop, target, action);
+                                sw.WriteLine("새로운 지역을 탐색합니다. " + loop + ", " + target + " 사이 벽이 제거되었습니다.");
+                                hasVisited[loop.r][loop.c] = true;
+                                current = loop;
+                                restart = true;
+                                sw.WriteLine("새로운 현재 위치는 " + current + " 입니다."); // LOG
+                                break;
+                            }
+                        }
+                        if (restart) break;
+                    }
+                }
+
+                // CODE ENDS HERE //
+                #endregion
+                sw.Flush();
+            }
+
         }
     }
 }
