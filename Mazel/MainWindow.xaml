@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mazel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="802" WindowStyle="ToolWindow">
+        Title="MAZEL" Height="450" Width="802" WindowStyle="ToolWindow">
     <Grid Name="RootGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="52*"/>
@@ -38,14 +38,12 @@
 
             <Label Content="Generator" FontFamily="/Mazel;component/#Montserrat" Grid.Row="1" FontSize="20" Height="35" VerticalAlignment="Top"/>
             <Button Content="Generate" Grid.Column="1" Margin="10" Grid.Row="1" FontFamily="/Mazel;component/#Montserrat" Click="MenuGenerateButton"/>
-            <ComboBox Margin="10,35,10,0" Grid.Row="1" SelectionChanged="MenuGenerateAlgComboChange" Name="GenerateAlgComboBox" SelectedIndex="0" Height="22" VerticalAlignment="Top">
+            <ComboBox Margin="10,35,10,0" Grid.Row="1" Name="GenerateAlgComboBox" SelectedIndex="0" Height="22" VerticalAlignment="Top">
                 <ComboBoxItem Content="Recursive Backtracker" HorizontalAlignment="Left" Width="246"/>
                 <ComboBoxItem Content="Kruskal" HorizontalAlignment="Left" Width="246"/>
                 <ComboBoxItem Content="Hunt-And-Kill" HorizontalAlignment="Left" Width="246"/>
                 <ComboBoxItem Content="(Don't generate, Just Reset.)" HorizontalAlignment="Left" Width="246"/>
             </ComboBox>
-            <TextBox Name="RowInputTextBox" Margin="10,61,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Row" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120"/>
-            <TextBox Name="ColInputTextBox" Margin="0,61,10,0" Grid.Row="1" TextWrapping="Wrap" Text="Column" Height="23" VerticalAlignment="Top" HorizontalAlignment="Right" Width="120"/>
 
 
             <Label Content="Solver" Grid.Row="2" FontSize="20" FontFamily="/Mazel;component/#Montserrat" Height="35" VerticalAlignment="Top"/>
@@ -53,9 +51,18 @@
             <ComboBox Margin="10,35,10,0" Grid.Row="2" Name="SolveAlgComboBox" Height="22" VerticalAlignment="Top" SelectedIndex="0">
                 <ComboBoxItem Content="A*" HorizontalAlignment="Left" Width="246"/>
                 <ComboBoxItem Content="Dijkstra" HorizontalAlignment="Left" Width="246"/>
+                <ComboBoxItem Content="(Don't show the solution.)" HorizontalAlignment="Left" Width="246"/>
             </ComboBox>
+            <Grid Name ="GenGrid" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="RowInputTextBox" Margin="10,0,4,0" TextWrapping="Wrap" Text="Row" Height="23" VerticalAlignment="Bottom"/>
+                <TextBox x:Name="ColInputTextBox" Margin="4,0,10,0" TextWrapping="Wrap" Text="Column" Height="23" VerticalAlignment="Bottom" Grid.Column="1"/>
+            </Grid>
 
-            <Label Content="Play MAZE" Grid.Row="3" FontFamily="/Mazel;component/#Montserrat" FontSize="20" Height="35" VerticalAlignment="Top"/>
+            <Label Content="Play MAZE&#xD;&#xA;Arrow keys to move." Grid.Row="3" FontFamily="/Mazel;component/#Montserrat" FontSize="20" Height="59" VerticalAlignment="Top"/>
             <Button Content="Play" Grid.Column="1" Margin="10" Grid.Row="3" FontFamily="/Mazel;component/#Montserrat"/>
             <Label Content="MAZEL" FontFamily="/Mazel;component/#Montserrat" FontSize="24" Foreground="#FF5DDBD3"/>
 
@@ -68,12 +75,30 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <Button Content="Export Maze"/>
-                <Button Content="Import Maze" Grid.Column="1"/>
-                <Button Content="Open Log file" Grid.Row="1"/>
-                <Button Content="Help" Grid.Column="1" Grid.Row="1"/>
+                <Button Content="Save Maze" Click="SaveMazeButton"/>
+                <Button Content="Open Maze" Grid.Row="1" Click="OpenMazeButton"/>
+                <Button Content="Open Log file" Grid.Column="2" Click="OpenLogButton"/>
+                <Button Content="Help" Grid.Column="2" Grid.Row="1" Click="HelpButton"/>
+                <Button Content="Export Maze as BMP" Grid.Column="1" Click="BMPExportButton"/>
+                <Button Content="Export Maze as SVG" Grid.Column="1" Grid.Row="1" Click="SVGExportButton"/>
             </Grid>
+            <TextBox x:Name="DelayTimeTextBox" TextWrapping="Wrap" Text="Delay Time" Height="23" VerticalAlignment="Bottom" Grid.Column="1" Margin="0,0,0,11"/>
+            <Label Content="Delay(ms)" Width="116" FontFamily="/Mazel;component/#Montserrat" HorizontalAlignment="Right" FontSize="18" Height="44" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Right"/>
+            <Grid Grid.Row="2" Margin="10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="SRTextBox" TextWrapping="Wrap" Text="StartRow" Height="23" VerticalAlignment="Bottom"/>
+                <TextBox x:Name="SCTextBox" TextWrapping="Wrap" Text="StartCol" Height="23" VerticalAlignment="Bottom" Grid.Column="1"/>
+                <TextBox x:Name="ERTextBox" TextWrapping="Wrap" Text="EndRow" Height="23" VerticalAlignment="Bottom" Grid.Column="2"/>
+                <TextBox x:Name="ECTextBox" TextWrapping="Wrap" Text="EndCol" Height="23" VerticalAlignment="Bottom" Grid.Column="3"/>
+            </Grid>
+
 
 
         </Grid>

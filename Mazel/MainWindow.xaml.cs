@@ -24,9 +24,12 @@ namespace Mazel
     public partial class MainWindow : Window
     {
         Maze mainMaze;
+
         List<List<Rectangle>> CellRects;
         List<List<Rectangle>> HolWallsRects;
         List<List<Rectangle>> VerWallsRects;
+
+        int delayTime;
 
         DispatcherTimer dispatcherTimer;
 
@@ -185,7 +188,12 @@ namespace Mazel
             }
 
             Dispatcher.Invoke(() => { }, DispatcherPriority.ApplicationIdle);
-            Thread.Sleep(20);
+            Thread.Sleep(delayTime);
+        }
+
+        class InvaildDelayTimeException : Exception
+        {
+            public InvaildDelayTimeException(string message) : base(message) { }
         }
 
         class InvaildMazeSizeException : Exception
@@ -196,7 +204,27 @@ namespace Mazel
         private void MenuGenerateButton(object sender, RoutedEventArgs e)
         {
             int inputRow = 0, inputCol = 0;
-            
+
+            #region EXCEPTION
+            try
+            {
+                delayTime = int.Parse(DelayTimeTextBox.Text);
+                if (delayTime < 0)
+                {
+                    throw new InvaildDelayTimeException("지연 시간은 0 이상이여야 합니다.");
+                }
+            }
+            catch (FormatException)
+            {
+                MessageBoxResult result = MessageBox.Show("지연 시간 입력란에는 숫자만 입력할 수 있습니다.", "Wait...");
+                return;
+            }
+            catch (InvaildDelayTimeException)
+            {
+                MessageBoxResult result = MessageBox.Show("지연 시간은 0 이상이여야 합니다.", "Wait...");
+                return;
+            }
+
             try
             {
                 inputRow = int.Parse(RowInputTextBox.Text);
@@ -216,15 +244,21 @@ namespace Mazel
                 MessageBoxResult result = MessageBox.Show("미로의 행과 열의 크기는 2 이상이여야 합니다.", "Wait...");
                 return;
             }
+            #endregion
 
             ArrayPoint2D size = new ArrayPoint2D(inputRow, inputCol);
             mainMaze = new Maze(size, new ArrayPoint2D(0, 0), new ArrayPoint2D(9, 10));
             Prepare();
 
+            mainMaze.isMaze = true;
             switch (GenerateAlgComboBox.SelectedIndex)
             {
                 case 0:
                     MazeGenerator.RecursiveBacktracker(mainMaze, ShowMaze);
+                    break;
+
+                case 1:
+                    MazeGenerator.Kruskal(mainMaze, ShowMaze);
                     break;
 
                 case 2:
@@ -232,6 +266,7 @@ namespace Mazel
                     break;
 
                 default:
+                    mainMaze.isMaze = false;
                     break;
             }
 
@@ -240,13 +275,51 @@ namespace Mazel
 
         private void MenuSolveButton(object sender, RoutedEventArgs e)
         {
+            #region EXCEPTION
 
+            #endregion
+
+            switch (SolveAlgComboBox.SelectedIndex)
+            {
+                case 0:
+                    break;
+
+                case 1:
+                    break;
+
+                default:
+                    break;
+            }
         }
 
-        private void MenuGenerateAlgComboChange(object sender, SelectionChangedEventArgs e)
+        private void SaveMazeButton(object sender, RoutedEventArgs e)
         {
 
         }
 
+        private void OpenMazeButton(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BMPExportButton(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SVGExportButton(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenLogButton(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void HelpButton(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

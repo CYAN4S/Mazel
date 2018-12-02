@@ -49,7 +49,7 @@ namespace Mazel
         }
         #endregion
 
-        static bool hasVisitedAll(List<List<bool>> vs)
+        static bool HasVisitedAll(List<List<bool>> vs)
         {
             foreach (var i in vs)
             {
@@ -72,6 +72,7 @@ namespace Mazel
                     hasVisited[i].Add(false);
             }
             #endregion
+
             using (FileStream fs = new FileStream("test.log", FileMode.Create))
             {
                 StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
@@ -83,7 +84,7 @@ namespace Mazel
 
                 Stack<ArrayPoint2D> PointStack = new Stack<ArrayPoint2D>();
 
-                while (!hasVisitedAll(hasVisited))
+                while (!HasVisitedAll(hasVisited))
                 {
                     List<ArrayPoint2D> avail = new List<ArrayPoint2D>();
                     AddNeighbor(avail, current, size);
@@ -111,8 +112,94 @@ namespace Mazel
             }
         }
 
+        class WallWithDirection
+        {
+            public WallWithDirection(bool isVerWall, ArrayPoint2D wall)
+            {
+                IsVerWall = isVerWall;
+                Wall = wall;
+            }
+            public bool IsVerWall { get; set; }
+            public ArrayPoint2D Wall { get; set; }
+        }
+
         public static void Kruskal(Maze maze, Action action)
         {
+            #region INITIALIZE
+
+            ArrayPoint2D size = maze.GetSize();
+
+            DisjointSet<ArrayPoint2D> disjointSet = new DisjointSet<ArrayPoint2D>();
+
+            List<WallWithDirection> WallList = new List<WallWithDirection>();
+            List<List<int>> CellIndex = new List<List<int>>();
+
+            for (int i = 0; i < size.r - 1; i++)
+            {
+                for (int j = 0; j < size.c; j++)
+                {
+                    WallList.Add(new WallWithDirection(false, new ArrayPoint2D(i, j)));
+                }
+            }
+            for (int i = 0; i < size.r; i++)
+            {
+                for (int j = 0; j < size.c - 1; j++)
+                {
+                    WallList.Add(new WallWithDirection(true, new ArrayPoint2D(i, j)));
+                }
+            }
+            for (int i = 0; i < size.r; i++)
+            {
+                CellIndex.Add(new List<int>());
+                for (int j = 0; j < size.c; j++)
+                {
+                    CellIndex[i].Add(-1);
+                }
+            }
+
+            #endregion
+
+            using (FileStream fs = new FileStream("test.log", FileMode.Create))
+            {
+                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+
+                #region ALGORITHM
+                // CODE STARTS HERE //
+                while (WallList.Count != 0)
+                {
+                    sw.WriteLine("Recursive Backtracker 생성입니다."); // LOG
+                    int rand = random.Next(WallList.Count);
+                    WallWithDirection target = WallList[rand];
+                    ArrayPoint2D ULPos = target.Wall;
+                    ArrayPoint2D DRPos = target.Wall + (target.IsVerWall ? new ArrayPoint2D(0, 1) : new ArrayPoint2D(1, 0));
+                    sw.WriteLine("현재 대상 벽은 " + ULPos + " 와 " + DRPos + " 사이의 벽입니다."); // LOG
+
+                    ArrayPoint2D[] targetCells = { ULPos, DRPos };
+                    foreach (var item in targetCells)
+                    {
+                        if (CellIndex[item.r][item.c] == -1)
+                        {
+                            CellIndex[item.r][item.c] = disjointSet.GetTreeCount();
+                            disjointSet.MakeSet(item);
+                            sw.WriteLine("Disjoint Set에 " + item + "을 추가합니다."); // LOG
+                        }
+                    }
+                    
+                    if (disjointSet.Find(CellIndex[ULPos.r][ULPos.c]) != disjointSet.Find(CellIndex[DRPos.r][DRPos.c]))
+                    {
+                        disjointSet.Union(CellIndex[ULPos.r][ULPos.c], CellIndex[DRPos.r][DRPos.c]);
+                        maze.RemoveWallBetween(ULPos, DRPos, action);
+                        sw.WriteLine(ULPos + " 와 " + DRPos + " 사이 벽이 제거되었습니다."); // LOG
+                    }
+
+                    WallList.RemoveAt(rand);
+                }
+
+                // CODE ENDS HERE //
+                #endregion
+
+                sw.Flush();
+            }
         }
 
         public static void HuntAndKill(Maze maze, Action action)
@@ -128,16 +215,18 @@ namespace Mazel
                     hasVisited[i].Add(false);
             }
             #endregion
+
             using (FileStream fs = new FileStream("test.log", FileMode.Create))
             {
                 StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+
                 #region ALGORITHM
                 // CODE STARTS HERE //
                 ArrayPoint2D current = new ArrayPoint2D(random.Next(size.r), random.Next(size.c));
                 hasVisited[current.r][current.c] = true;
                 sw.WriteLine("Hunt-And-Kill 생성입니다. 현재 위치는 " + current + " 입니다."); // LOG
 
-                while (!hasVisitedAll(hasVisited))
+                while (!HasVisitedAll(hasVisited))
                 {
                     List<ArrayPoint2D> avail = new List<ArrayPoint2D>();
                     AddNeighbor(avail, current, size);
@@ -186,9 +275,9 @@ namespace Mazel
 
                 // CODE ENDS HERE //
                 #endregion
+
                 sw.Flush();
             }
-
         }
     }
 }

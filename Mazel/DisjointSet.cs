@@ -8,40 +8,48 @@ namespace Mazel
 {
     class DisjointSet<T>
     {
-        struct DisjointSetNode
+        List<DisjointSetNode> Tree;
+
+        class DisjointSetNode
         {
-            public T data;
-            public int parent;
-            public int rank;
+            public T Data { get; set; }
+            public int Parent { get; set; }
+            public int Rank { get; set; }
 
-            public DisjointSetNode(T data, int parent) : this()
+            public DisjointSetNode(T data)
             {
-                this.data = data;
-                rank = 0;
+                Data = data;
+                Rank = 0;
             }
-
-            public void ChangeParent(int parent) => this.parent = parent;
-            public void PlusOneRank() => rank++;
         }
 
-        List<DisjointSetNode> Set;
-
-        public DisjointSet() => Set = new List<DisjointSetNode>();
+        public int GetTreeCount()
+        {
+            return Tree.Count;
+        }
+        
+        public DisjointSet()
+        {
+            Tree = new List<DisjointSetNode>();
+        }
 
         public void MakeSet(T input)
         {
-            DisjointSetNode node = new DisjointSetNode(input, Set.Count);
-            Set.Add(node);
+            DisjointSetNode node = new DisjointSetNode(input)
+            {
+                Parent = Tree.Count
+            };
+            Tree.Add(node);
             return;
         }
 
         public int Find(int index)
         {
-            if (index != Set[index].parent)
+            if (index != Tree[index].Parent)
             {
-                Set[index].ChangeParent(Find(Set[index].parent));
+                Tree[index].Parent = Find(Tree[index].Parent);
             }
-            return Set[index].parent;
+            return Tree[index].Parent;
         }
 
         public void Union(int a, int b)
@@ -53,20 +61,20 @@ namespace Mazel
             {
                 return;
             }
-            if (Set[roota].rank < Set[rootb].rank)
+
+            if (Tree[roota].Rank < Tree[rootb].Rank)
             {
-                Set[roota].ChangeParent(rootb);
+                Tree[roota].Parent = rootb;
             }
-            else if (Set[roota].rank > Set[rootb].rank)
+            else if (Tree[roota].Rank > Tree[rootb].Rank)
             {
-                Set[rootb].ChangeParent(roota);
+                Tree[rootb].Parent = roota;
             }
             else
             {
-                Set[rootb].ChangeParent(roota);
-                Set[roota].PlusOneRank();
+                Tree[rootb].Parent = roota;
+                Tree[roota].Rank++;
             }
-
         }
     }
 }

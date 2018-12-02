@@ -29,20 +29,12 @@ namespace Mazel
             result.c = left.c + right.c;
             return result;
         }
-
-
     }
-
-    enum Usage
-    {
-        VISITATION,
-        SECTOR
-    }
-
+    
     class Maze
     {
         List<List<int>> Cells;
-        Usage usage;
+        public bool isMaze = false;
 
         public List<List<bool>> HolWalls { get; }
         public List<List<bool>> VerWalls { get; }
@@ -101,9 +93,6 @@ namespace Mazel
             }
             else
                 return false;
-            
-            
         }
-        
     }
 }
