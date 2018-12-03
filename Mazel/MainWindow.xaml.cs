@@ -191,6 +191,7 @@ namespace Mazel
             Thread.Sleep(delayTime);
         }
 
+        #region NEW EXCEPTION
         class InvaildDelayTimeException : Exception
         {
             public InvaildDelayTimeException(string message) : base(message) { }
@@ -200,6 +201,7 @@ namespace Mazel
         {
             public InvaildMazeSizeException(string msg) : base(msg) { }
         }
+        #endregion
 
         private void MenuGenerateButton(object sender, RoutedEventArgs e)
         {
@@ -294,12 +296,16 @@ namespace Mazel
 
         private void SaveMazeButton(object sender, RoutedEventArgs e)
         {
-
+            MazeConverter.Save(mainMaze);
         }
 
         private void OpenMazeButton(object sender, RoutedEventArgs e)
         {
-
+            if (MazeConverter.Open(ref mainMaze))
+            {
+                Prepare();
+                ShowMaze();
+            }
         }
 
         private void BMPExportButton(object sender, RoutedEventArgs e)
@@ -314,7 +320,15 @@ namespace Mazel
 
         private void OpenLogButton(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                Process.Start("test.log");
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                MessageBoxResult result = MessageBox.Show("test.log 파일이 존재하지 않습니다.", "Wait...");
+                return;
+            }
         }
 
         private void HelpButton(object sender, RoutedEventArgs e)
