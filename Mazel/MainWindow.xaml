@@ -99,7 +99,7 @@
                 <TextBox x:Name="ERTextBox" TextWrapping="Wrap" Text="EndRow" Height="23" VerticalAlignment="Bottom" Grid.Column="2"/>
                 <TextBox x:Name="ECTextBox" TextWrapping="Wrap" Text="EndCol" Height="23" VerticalAlignment="Bottom" Grid.Column="3"/>
             </Grid>
-            <Label Content="미로를 생성하고, Solver의 항목을 채우세요.&#xD;&#xA;키보드 방향키로 조작합니다." HorizontalAlignment="Left" Margin="0,35,0,0" Grid.Row="3" VerticalAlignment="Top" Height="54" Width="268"/>
+            <Label Content="미로를 생성하고, Solver의 항목을 채우세요.&#xA;WASD로 조작합니다." HorizontalAlignment="Left" Margin="0,35,0,0" Grid.Row="3" VerticalAlignment="Top" Height="54" Width="268"/>
 
 
 

@@ -186,21 +186,28 @@ namespace Mazel
 
             for (int i = 0; i < mainMaze.GetSize().r; i++)
             {
-                for (int j = 0; j < mainMaze.GetSize().c - 1; j++)
+                for (int j = 0; j < mainMaze.GetSize().c; j++)
                 {
-                    //CellRects[i][j].Fill = mainMaze.Cells[i][j] ? Brushes.White : null;
                     switch (mainMaze.Cells[i][j])
                     {
                         case 0:
                             CellRects[i][j].Fill = Brushes.White;
                             break;
+
+                        case 4:
+                            CellRects[i][j].Fill = Brushes.Aqua;
+                            break;
+
+                        case 5:
+                            CellRects[i][j].Fill = Brushes.Pink;
+                            break;
+
                         default:
                             CellRects[i][j].Fill = null;
                             break;
                     }
                 }
             }
-            
             Dispatcher.Invoke(() => { }, DispatcherPriority.ApplicationIdle);
         }
 
@@ -380,6 +387,22 @@ namespace Mazel
 
         private void MenuPlayButton(object sender, RoutedEventArgs e)
         {
+            if (MazeGame.isRunning)
+            {
+                MazeGame.isRunning = false;
+
+                for (int i = 0; i < mainMaze.GetSize().r; i++)
+                {
+                    for (int j = 0; j < mainMaze.GetSize().c; j++)
+                    {
+                        mainMaze.Cells[i][j] = 0;
+                    }
+                }
+                ShowMaze();
+
+                return;
+            }
+
             int inputSR = 0, inputSC = 0, inputER = 0, inputEC = 0;
 
             #region EXCEPTION
@@ -401,12 +424,22 @@ namespace Mazel
             #endregion
 
             MazeGame.isRunning = true;
-            MazeGame.playerPos = new ArrayPoint2D(inputSR, inputSC);
+
+            MazeGame.playerPos.r = inputSR;
+            MazeGame.playerPos.c = inputSC;
+
+            mainMaze.Cells[inputSR][inputSC] = 4;
+            mainMaze.Cells[inputER][inputEC] = 5;
+
+            ShowMaze();
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-
+            if (MazeGame.MovePlayer(mainMaze, e.Key) && MazeGame.isRunning)
+            {
+                ShowMaze();
+            }
         }
     }
 }
