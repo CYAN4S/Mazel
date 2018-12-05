@@ -95,6 +95,7 @@
   <ItemGroup>
     <Compile Include="Maze.cs" />
     <Compile Include="MazeConverter.cs" />
+    <Compile Include="MazeGame.cs" />
     <Compile Include="MazeGenerator.cs" />
     <Compile Include="MazeSolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

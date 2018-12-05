@@ -29,38 +29,17 @@ namespace Mazel
         List<List<Rectangle>> HolWallsRects;
         List<List<Rectangle>> VerWallsRects;
 
-        int delayTime;
-
-        DispatcherTimer dispatcherTimer;
+        public static int delayTime = 0;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            #region DispatcherTimer Setup
-            dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler(DispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
-            dispatcherTimer.Start();
-            #endregion
-
             mainMaze = new Maze(new ArrayPoint2D(5, 5), new ArrayPoint2D(0, 0), new ArrayPoint2D(9, 10));
 
             Prepare();
             ShowMaze();
-            
         }
-
-        #region DispatcherTimer Tick Setup
-        private void DispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            // Updating the Label which displays the current second
-            //lblSeconds.Content = DateTime.Now.Second;
-
-            // Forcing the CommandManager to raise the RequerySuggested event
-            CommandManager.InvalidateRequerySuggested();
-        }
-        #endregion
 
         public void Prepare()
         {
@@ -166,6 +145,24 @@ namespace Mazel
                 }
             }
 
+            CellRects = new List<List<Rectangle>>();
+            for (int i = 0; i < mainMaze.GetSize().r; i++)
+            {
+                CellRects.Add(new List<Rectangle>());
+                for (int j = 0; j < mainMaze.GetSize().c; j++)
+                {
+                    Rectangle rectangle = new Rectangle
+                    {
+                        Fill = Brushes.White,
+                        StrokeThickness = 0
+                    };
+                    CellRects[i].Add(rectangle);
+                    MazeGrid.Children.Add(rectangle);
+                    Grid.SetRow(rectangle, i * 2 + 1);
+                    Grid.SetColumn(rectangle, j * 2 + 1);
+                }
+            }
+
             return;
         }
 
@@ -175,18 +172,40 @@ namespace Mazel
             {
                 for (int j = 0; j < mainMaze.GetSize().c; j++)
                 {
-                    HolWallsRects[i][j].Fill = mainMaze.HolWalls[i][j] ? Brushes.Black : null;
+                    HolWallsRects[i][j].Fill = mainMaze.HolWalls[i][j] ? Brushes.Black : Brushes.White;
                 }
             }
-            
+
             for (int i = 0; i < mainMaze.GetSize().r; i++)
             {
                 for (int j = 0; j < mainMaze.GetSize().c - 1; j++)
                 {
-                    VerWallsRects[i][j].Fill = mainMaze.VerWalls[i][j] ? Brushes.Black : null;
+                    VerWallsRects[i][j].Fill = mainMaze.VerWalls[i][j] ? Brushes.Black : Brushes.White;
                 }
             }
 
+            for (int i = 0; i < mainMaze.GetSize().r; i++)
+            {
+                for (int j = 0; j < mainMaze.GetSize().c - 1; j++)
+                {
+                    //CellRects[i][j].Fill = mainMaze.Cells[i][j] ? Brushes.White : null;
+                    switch (mainMaze.Cells[i][j])
+                    {
+                        case 0:
+                            CellRects[i][j].Fill = Brushes.White;
+                            break;
+                        default:
+                            CellRects[i][j].Fill = null;
+                            break;
+                    }
+                }
+            }
+            
+            Dispatcher.Invoke(() => { }, DispatcherPriority.ApplicationIdle);
+        }
+
+        public void Delay()
+        {
             Dispatcher.Invoke(() => { }, DispatcherPriority.ApplicationIdle);
             Thread.Sleep(delayTime);
         }
@@ -252,7 +271,6 @@ namespace Mazel
             mainMaze = new Maze(size, new ArrayPoint2D(0, 0), new ArrayPoint2D(9, 10));
             Prepare();
 
-            mainMaze.isMaze = true;
             switch (GenerateAlgComboBox.SelectedIndex)
             {
                 case 0:
@@ -272,13 +290,31 @@ namespace Mazel
                     break;
             }
 
+            mainMaze.isMaze = true;
             ShowMaze();
         }
 
         private void MenuSolveButton(object sender, RoutedEventArgs e)
         {
-            #region EXCEPTION
+            int inputSR = 0, inputSC = 0, inputER = 0, inputEC = 0;
 
+            #region EXCEPTION
+            if (!mainMaze.isMaze)
+            {
+                MessageBoxResult result = MessageBox.Show("미로를 먼저 생성해주세요.", "Wait...");
+                return;
+            }
+
+            try
+            {
+                inputSR = int.Parse(SRTextBox.Text); inputSC = int.Parse(SCTextBox.Text);
+                inputER = int.Parse(ERTextBox.Text); inputEC = int.Parse(ECTextBox.Text);
+            }
+            catch (FormatException)
+            {
+                MessageBoxResult result = MessageBox.Show("시작점/종료점 입력란에는 숫자만 입력할 수 있습니다.", "Wait...");
+                return;
+            }
             #endregion
 
             switch (SolveAlgComboBox.SelectedIndex)
@@ -296,6 +332,11 @@ namespace Mazel
 
         private void SaveMazeButton(object sender, RoutedEventArgs e)
         {
+            if (!mainMaze.isMaze)
+            {
+                MessageBoxResult result = MessageBox.Show("미로를 먼저 생성해주세요.", "Wait...");
+                return;
+            }
             MazeConverter.Save(mainMaze);
         }
 
@@ -305,6 +346,7 @@ namespace Mazel
             {
                 Prepare();
                 ShowMaze();
+                mainMaze.isMaze = true;
             }
         }
 
@@ -332,6 +374,37 @@ namespace Mazel
         }
 
         private void HelpButton(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void MenuPlayButton(object sender, RoutedEventArgs e)
+        {
+            int inputSR = 0, inputSC = 0, inputER = 0, inputEC = 0;
+
+            #region EXCEPTION
+            if (!mainMaze.isMaze)
+            {
+                MessageBoxResult result = MessageBox.Show("미로를 먼저 생성해주세요.", "Wait...");
+                return;
+            }
+            try
+            {
+                inputSR = int.Parse(SRTextBox.Text); inputSC = int.Parse(SCTextBox.Text);
+                inputER = int.Parse(ERTextBox.Text); inputEC = int.Parse(ECTextBox.Text);
+            }
+            catch (FormatException)
+            {
+                MessageBoxResult result = MessageBox.Show("시작점/종료점 입력란에는 숫자만 입력할 수 있습니다.", "Wait...");
+                return;
+            }
+            #endregion
+
+            MazeGame.isRunning = true;
+            MazeGame.playerPos = new ArrayPoint2D(inputSR, inputSC);
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
 
         }

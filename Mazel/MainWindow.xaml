@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mazel"
         mc:Ignorable="d"
-        Title="MAZEL" Height="450" Width="802" WindowStyle="ToolWindow">
+        Title="MAZEL" Height="450" Width="802" WindowStyle="ToolWindow" KeyDown="Window_KeyDown"
+        >
     <Grid Name="RootGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="52*"/>
@@ -62,8 +63,8 @@
                 <TextBox x:Name="ColInputTextBox" Margin="4,0,10,0" TextWrapping="Wrap" Text="Column" Height="23" VerticalAlignment="Bottom" Grid.Column="1"/>
             </Grid>
 
-            <Label Content="Play MAZE&#xD;&#xA;Arrow keys to move." Grid.Row="3" FontFamily="/Mazel;component/#Montserrat" FontSize="20" Height="59" VerticalAlignment="Top"/>
-            <Button Content="Play" Grid.Column="1" Margin="10" Grid.Row="3" FontFamily="/Mazel;component/#Montserrat"/>
+            <Label Content="Play MAZE" Grid.Row="3" FontFamily="/Mazel;component/#Montserrat" FontSize="20" Height="35" VerticalAlignment="Top"/>
+            <Button Content="Play" Grid.Column="1" Margin="10" Grid.Row="3" FontFamily="/Mazel;component/#Montserrat" Click="MenuPlayButton"/>
             <Label Content="MAZEL" FontFamily="/Mazel;component/#Montserrat" FontSize="24" Foreground="#FF5DDBD3"/>
 
             <Label Content="File Import/Export" Grid.Row="4" FontFamily="/Mazel;component/#Montserrat" FontSize="20" Height="35" VerticalAlignment="Top"/>
@@ -84,7 +85,7 @@
                 <Button Content="Export Maze as BMP" Grid.Column="1" Click="BMPExportButton"/>
                 <Button Content="Export Maze as SVG" Grid.Column="1" Grid.Row="1" Click="SVGExportButton"/>
             </Grid>
-            <TextBox x:Name="DelayTimeTextBox" TextWrapping="Wrap" Text="Delay Time" Height="23" VerticalAlignment="Bottom" Grid.Column="1" Margin="0,0,0,11"/>
+            <TextBox x:Name="DelayTimeTextBox" TextWrapping="Wrap" Text="5" Height="23" VerticalAlignment="Bottom" Grid.Column="1" Margin="0,0,0,11"/>
             <Label Content="Delay(ms)" Width="116" FontFamily="/Mazel;component/#Montserrat" HorizontalAlignment="Right" FontSize="18" Height="44" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Right"/>
             <Grid Grid.Row="2" Margin="10,0">
                 <Grid.ColumnDefinitions>
@@ -98,6 +99,7 @@
                 <TextBox x:Name="ERTextBox" TextWrapping="Wrap" Text="EndRow" Height="23" VerticalAlignment="Bottom" Grid.Column="2"/>
                 <TextBox x:Name="ECTextBox" TextWrapping="Wrap" Text="EndCol" Height="23" VerticalAlignment="Bottom" Grid.Column="3"/>
             </Grid>
+            <Label Content="미로를 생성하고, Solver의 항목을 채우세요.&#xD;&#xA;키보드 방향키로 조작합니다." HorizontalAlignment="Left" Margin="0,35,0,0" Grid.Row="3" VerticalAlignment="Top" Height="54" Width="268"/>
 
 
 

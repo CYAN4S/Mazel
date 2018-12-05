@@ -12,8 +12,11 @@ namespace Mazel
     {
         static Random random = new Random();
 
-        // Place to Add, Current Position, Maze Size
-        public static void AddNeighbor(List<ArrayPoint2D> list, ArrayPoint2D position, ArrayPoint2D mazeSize)
+        // position을 기준으로 이웃한 셀 위치를 List에 저장합니다.
+        // List<> list: 저장할 List
+        // ArrayPoint2D position: 기준 위치
+        // ArrayPoint2D mazeSize: 미로 크기
+        static void AddNeighbor(List<ArrayPoint2D> list, ArrayPoint2D position, ArrayPoint2D mazeSize)
         {
             if (position.r != 0)
                 list.Add(new ArrayPoint2D(position.r - 1, position.c));
@@ -28,27 +31,6 @@ namespace Mazel
                 list.Add(new ArrayPoint2D(position.r, position.c + 1));
         }
 
-        #region Log Writer
-        public static void StartWrite()
-        {
-            using (FileStream fs = new FileStream("test.log", FileMode.Create))
-            {
-                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-                sw.WriteLine("WRITE START");
-                sw.Flush();
-            }
-        }
-        public static void AppendWrite(string line)
-        {
-            using (FileStream fs = new FileStream("test.log", FileMode.Append))
-            {
-                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-                sw.WriteLine(line);
-                sw.Flush();
-            }
-        }
-        #endregion
-
         static bool HasVisitedAll(List<List<bool>> vs)
         {
             foreach (var i in vs)
@@ -59,6 +41,22 @@ namespace Mazel
             return true;
         }
 
+        // Kruskal 알고리즘 구현을 위한 자료구조 입니다.
+        // 벽의 위치와 벽의 방향(가로로 길면 false, 세로로 길면 true)을 담을 수 있습니다.
+        class WallWithDirection
+        {
+            public WallWithDirection(bool isVerWall, ArrayPoint2D wall)
+            {
+                IsVerWall = isVerWall;
+                Wall = wall;
+            }
+            public bool IsVerWall { get; set; }
+            public ArrayPoint2D Wall { get; set; }
+        }
+
+        // Recursive Backtracker 방식의 미로 생성
+        // maze: 완전 미로를 생성할 변수
+        // action: 벽을 제거할 때마다 실행되기를 원하는 함수
         public static void RecursiveBacktracker(Maze maze, Action action)
         {
             #region INITIALIZE
@@ -76,6 +74,7 @@ namespace Mazel
             using (FileStream fs = new FileStream("test.log", FileMode.Create))
             {
                 StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+
                 #region ALGORITHM
                 // CODE STARTS HERE //
                 ArrayPoint2D current = maze.StartPoint;
@@ -108,21 +107,14 @@ namespace Mazel
                     }
                 }
                 #endregion
+
                 sw.Flush();
             }
         }
 
-        class WallWithDirection
-        {
-            public WallWithDirection(bool isVerWall, ArrayPoint2D wall)
-            {
-                IsVerWall = isVerWall;
-                Wall = wall;
-            }
-            public bool IsVerWall { get; set; }
-            public ArrayPoint2D Wall { get; set; }
-        }
-
+        // Kruskal 방식의 미로 생성
+        // maze: 완전 미로를 생성할 변수
+        // action: 벽을 제거할 때마다 실행되기를 원하는 함수
         public static void Kruskal(Maze maze, Action action)
         {
             #region INITIALIZE
@@ -202,6 +194,9 @@ namespace Mazel
             }
         }
 
+        // HuntAndKill 방식의 미로 생성
+        // maze: 완전 미로를 생성할 변수
+        // action: 벽을 제거할 때마다 실행되기를 원하는 함수
         public static void HuntAndKill(Maze maze, Action action)
         {
             #region INITIALIZE
