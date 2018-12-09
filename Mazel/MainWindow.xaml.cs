@@ -194,6 +194,14 @@ namespace Mazel
                             CellRects[i][j].Fill = Brushes.White;
                             break;
 
+                        case 1:
+                            CellRects[i][j].Fill = Brushes.LightPink;
+                            break;
+
+                        case 2:
+                            CellRects[i][j].Fill = Brushes.Cyan;
+                            break;
+
                         case 4:
                             CellRects[i][j].Fill = Brushes.Aqua;
                             break;
@@ -316,6 +324,9 @@ namespace Mazel
             {
                 inputSR = int.Parse(SRTextBox.Text); inputSC = int.Parse(SCTextBox.Text);
                 inputER = int.Parse(ERTextBox.Text); inputEC = int.Parse(ECTextBox.Text);
+
+                mainMaze.StartPoint = new ArrayPoint2D(inputSR, inputSC);
+                mainMaze.EndPoint = new ArrayPoint2D(inputER, inputEC);
             }
             catch (FormatException)
             {
@@ -327,12 +338,19 @@ namespace Mazel
             switch (SolveAlgComboBox.SelectedIndex)
             {
                 case 0:
+                    MazeSolver.BFS(mainMaze, ShowMaze);
                     break;
 
                 case 1:
                     break;
 
                 default:
+                    for (int i = 0; i < mainMaze.Cells.Count; i++)
+                    {
+                        for (int j = 0; j < mainMaze.Cells[i].Count; j++)
+                            mainMaze.Cells[i][j] = 0;
+                    }
+                    ShowMaze();
                     break;
             }
         }

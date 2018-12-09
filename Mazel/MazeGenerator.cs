@@ -8,9 +8,14 @@ using System.Threading;
 
 namespace Mazel
 {
-    static class MazeGenerator
+    class MazeGenerator
     {
         static Random random = new Random();
+
+        public MazeGenerator()
+        {
+
+        }
 
         // position을 기준으로 이웃한 셀 위치를 List에 저장합니다.
         // List<> list: 저장할 List
@@ -35,8 +40,13 @@ namespace Mazel
         {
             foreach (var i in vs)
             {
-                if (i.Contains(false))
-                    return false;
+                foreach (var j in i)
+                {
+                    if (!j)
+                    {
+                        return false;
+                    }
+                }
             }
             return true;
         }
