@@ -11,11 +11,7 @@ namespace Mazel
     class MazeGenerator
     {
         static Random random = new Random();
-
-        public MazeGenerator()
-        {
-
-        }
+        
 
         // position을 기준으로 이웃한 셀 위치를 List에 저장합니다.
         // List<> list: 저장할 List
@@ -53,7 +49,7 @@ namespace Mazel
 
         // Kruskal 알고리즘 구현을 위한 자료구조 입니다.
         // 벽의 위치와 벽의 방향(가로로 길면 false, 세로로 길면 true)을 담을 수 있습니다.
-        class WallWithDirection
+        struct WallWithDirection
         {
             public WallWithDirection(bool isVerWall, ArrayPoint2D wall)
             {
@@ -136,6 +132,9 @@ namespace Mazel
             List<WallWithDirection> WallList = new List<WallWithDirection>();
             List<List<int>> CellIndex = new List<List<int>>();
 
+            int removedCount = 0;
+            int removedCountTarget = (size.r * size.c) - 1;
+
             for (int i = 0; i < size.r - 1; i++)
             {
                 for (int j = 0; j < size.c; j++)
@@ -167,7 +166,8 @@ namespace Mazel
 
                 #region ALGORITHM
                 // CODE STARTS HERE //
-                while (WallList.Count != 0)
+                //WallList.Count != 0 || 
+                while (removedCount != removedCountTarget)
                 {
                     sw.WriteLine("Recursive Backtracker 생성입니다."); // LOG
                     int rand = random.Next(WallList.Count);
@@ -192,6 +192,7 @@ namespace Mazel
                         disjointSet.Union(CellIndex[ULPos.r][ULPos.c], CellIndex[DRPos.r][DRPos.c]);
                         maze.RemoveWallBetween(ULPos, DRPos, action);
                         sw.WriteLine(ULPos + " 와 " + DRPos + " 사이 벽이 제거되었습니다."); // LOG
+                        removedCount++;
                     }
 
                     WallList.RemoveAt(rand);

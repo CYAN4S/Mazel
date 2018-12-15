@@ -121,10 +121,5 @@ namespace Mazel
             }
             
         }
-
-        public static void Dijkstra(Maze maze, Action action)
-        {
-            
-        }
     }
 }

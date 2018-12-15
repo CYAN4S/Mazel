@@ -35,7 +35,7 @@ namespace Mazel
         {
             InitializeComponent();
 
-            mainMaze = new Maze(new ArrayPoint2D(5, 5), new ArrayPoint2D(0, 0), new ArrayPoint2D(9, 10));
+            mainMaze = new Maze(new ArrayPoint2D(5, 5), new ArrayPoint2D(0, 0), new ArrayPoint2D(4, 4));
 
             Prepare();
             ShowMaze();
@@ -290,14 +290,17 @@ namespace Mazel
             {
                 case 0:
                     MazeGenerator.RecursiveBacktracker(mainMaze, ShowMaze);
+                    mainMaze.isMaze = true;
                     break;
 
                 case 1:
                     MazeGenerator.Kruskal(mainMaze, ShowMaze);
+                    mainMaze.isMaze = true;
                     break;
 
                 case 2:
                     MazeGenerator.HuntAndKill(mainMaze, ShowMaze);
+                    mainMaze.isMaze = true;
                     break;
 
                 default:
@@ -305,7 +308,7 @@ namespace Mazel
                     break;
             }
 
-            mainMaze.isMaze = true;
+            
             ShowMaze();
         }
 
@@ -341,9 +344,6 @@ namespace Mazel
                     MazeSolver.BFS(mainMaze, ShowMaze);
                     break;
 
-                case 1:
-                    break;
-
                 default:
                     for (int i = 0; i < mainMaze.Cells.Count; i++)
                     {
@@ -375,16 +375,6 @@ namespace Mazel
             }
         }
 
-        private void BMPExportButton(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void SVGExportButton(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void OpenLogButton(object sender, RoutedEventArgs e)
         {
             try
@@ -396,11 +386,6 @@ namespace Mazel
                 MessageBoxResult result = MessageBox.Show("test.log 파일이 존재하지 않습니다.", "Wait...");
                 return;
             }
-        }
-
-        private void HelpButton(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void MenuPlayButton(object sender, RoutedEventArgs e)

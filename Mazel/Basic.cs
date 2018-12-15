@@ -70,13 +70,13 @@ namespace Mazel
             return result;
         }
 
-        public static ArrayPoint2D operator *(ArrayPoint2D arrayPoint2D, int num)
-        {
-            ArrayPoint2D result;
-            result.r = arrayPoint2D.r * num;
-            result.c = arrayPoint2D.c * num;
-            return result;
-        }
+        //public static ArrayPoint2D operator *(ArrayPoint2D arrayPoint2D, int num)
+        //{
+        //    ArrayPoint2D result;
+        //    result.r = arrayPoint2D.r * num;
+        //    result.c = arrayPoint2D.c * num;
+        //    return result;
+        //}
 
         public static bool operator ==(ArrayPoint2D left, ArrayPoint2D right)
         {
